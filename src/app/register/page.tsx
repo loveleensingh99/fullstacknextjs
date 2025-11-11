@@ -30,19 +30,23 @@ const RegisterPage = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email) {
       newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
     }
+
+    // else if (!emailRegex.test(formData.email)) {
+    //   newErrors.email = "Please enter a valid email address";
+    // }
 
     // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters long";
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password =
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number";
     }
+
+    // else if (formData.password.length < 8) {
+    //   newErrors.password = "Password must be at least 8 characters long";
+    // } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+    //   newErrors.password =
+    //     "Password must contain at least one uppercase letter, one lowercase letter, and one number";
+    // }
 
     // Confirm password validation
     if (!formData.confirmPassword) {
@@ -73,7 +77,7 @@ const RegisterPage = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }

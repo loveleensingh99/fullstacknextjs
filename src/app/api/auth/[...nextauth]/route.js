@@ -1,8 +1,11 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/User";
-import { error } from "console";
+import bcrypt from "bcrypt";
+import { connectToDatabase } from "../../../../../utils/db";
+
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
@@ -19,11 +22,14 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required");
-        }
+
         try {
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Email and password are required");
+          }
+          await connectToDatabase();
           const user = await User.findOne({ email: credentials.email });
+
           if (!user) {
             throw new Error("Invalid email or password");
           }
@@ -36,8 +42,23 @@ export const authOptions = {
           }
           return { id: user._id.toString(), email: user.email };
         } catch (error) {
-          throw new Error(error);
+          console.log("Error", error);
+          throw new Error("Authentication failed", error);
         }
+      },
+    }),
+
+    // GithubProvider({
+    //   clientId: process.env.GITHUB_ID,
+    //   clientSecret: process.env.GITHUB_SECRET,
+    // }),
+    GoogleProvider({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "select_account",
+        },
       },
     }),
   ],
@@ -49,6 +70,10 @@ export const authOptions = {
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Always redirect to /dashboard after login
+      return baseUrl + "/dashboard";
+    },
   },
 
   pages: {
@@ -56,10 +81,11 @@ export const authOptions = {
     error: "/login",
   },
   session: {
-    stratergy: "jwt",
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-export default NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

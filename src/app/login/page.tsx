@@ -27,9 +27,11 @@ const LoginPage = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email) {
       newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
     }
+
+    // else if (!emailRegex.test(formData.email)) {
+    //   newErrors.email = "Please enter a valid email address";
+    // }
 
     // Password validation
     if (!formData.password) {
@@ -82,7 +84,7 @@ const LoginPage = () => {
         const session = await getSession();
         if (session) {
           // Redirect to home page or dashboard
-          router.push("/");
+          router.push("/dashboard");
           router.refresh();
         }
       }
@@ -308,6 +310,43 @@ const LoginPage = () => {
               )}
             </button>
 
+            <button
+              type="button"
+              onClick={() => signIn("google", { prompt: "select_account" })}
+              className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition duration-200 mb-2"
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                viewBox="0 0 48 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clipPath="url(#clip0_17_40)">
+                  <path
+                    d="M47.5 24.5C47.5 23.1 47.4 21.8 47.2 20.5H24V28.5H37.3C36.7 31.3 34.9 33.6 32.3 35.1V40.1H40C44.1 36.3 47.5 30.9 47.5 24.5Z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M24 48C30.5 48 35.9 45.9 40 40.1L32.3 35.1C30.2 36.5 27.4 37.4 24 37.4C17.7 37.4 12.2 33.3 10.3 27.7H2.3V32.9C6.4 41.1 14.5 48 24 48Z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M10.3 27.7C9.8 26.3 9.5 24.7 9.5 23C9.5 21.3 9.8 19.7 10.3 18.3V13.1H2.3C0.8 16.1 0 19.4 0 23C0 26.6 0.8 29.9 2.3 32.9L10.3 27.7Z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M24 8.6C27.7 8.6 30.7 9.9 32.8 11.9L40.2 4.5C35.9 0.6 30.5 -1.5 24 0C14.5 0 6.4 6.9 2.3 15.1L10.3 20.3C12.2 14.7 17.7 10.6 24 10.6V8.6Z"
+                    fill="#EA4335"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_17_40">
+                    <rect width="48" height="48" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+              Sign in with Google
+            </button>
             {/* Register Link */}
             <div className="text-center">
               <p className="text-sm text-gray-600 dark:text-gray-300">
