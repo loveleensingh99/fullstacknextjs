@@ -14,7 +14,14 @@ const page = () => {
       <p>Email: {session.user?.email}</p>
       {/* Add more user details as needed */}
 
-      {session && <button onClick={() => signOut()}></button>}
+      {session && (
+        <button
+          onClick={() => signOut()}
+          className="cursor-pointer bg-blue-500 p-4 text-white"
+        >
+          Sign out
+        </button>
+      )}
     </div>
   );
 };
